@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+ 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+       
+      </head>
+<style>
+     h3{font-size: 50px;font-family: 'Times New Roman', Times, serif;color:rgb(20, 4, 4);}
+    h2{font-size: 40px; font-family: 'Times New Roman', Times, serif;color:black;}
+    p{font-size: 25px; font-family: 'Times New Roman', Times, serif;color:black;}
+</style>
+<body style="background-color: rgb(50, 94, 105);">
+    <div id="chartContainer"></div>
+    <canvas id="chart" width="400" height="400"></canvas>
+<center> 
+
+<h3><b>SENSOR DATA PLOTTING 1</b></h3>
+<h2><b>DTH11 Humidity data </b></h2>
+<p>please select the date.</p>
+<input type = "date"  id="demo">  
+<button class="btn btn-success" type="button" onclick=myFunction()>Plot Graph</button>
+<div id="chartContainer"></div>
+<canvas id="chart" width="400" height="400"></canvas>
+
+<h3><b>SENSOR DATA PLOTTING 2</b></h3>
+<h2><b>soil moisture data</b></h2>
+<p>please select the date.</p>
+<input type = "date"  id="demo1">  
+<button class="btn btn-success" type="button" onclick=myFunction1()>Plot data</button>
+<div id="chartContainer1"></div>
+<canvas id="chart1" width="400" height="400"></canvas>
+
+<h3><b>SENSOR DATA PLOTTING 3</b></h3>
+<h2><b>DHT11 Temperature data data </b></h2>
+<p>please select the date.</p>
+<input type = "date"  id="demo2">  
+<button class="btn btn-success" type="button" onclick=myFunction2()>Plot data</button>
+<div id="chartContainer2"></div>
+<canvas id="chart2" width="400" height="400"></canvas>
+ 
+</center>
+<div id="chartContainer"></div>
+<canvas id="chart" width="400" height="400"></canvas>
+
+<script language = "javascript" type = "text/javascript">
+ 
+ 
+ function myFunction() {
+    var selectedDate=document.getElementById("demo").value;
+    console.log(selectedDate);
+
+    const Http = new XMLHttpRequest();
+    const url='https://sensordata-8b704-default-rtdb.firebaseio.com/Humidity_data.json';
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = () => {
+        if (Http.readyState == 4 && Http.status == 200) {
+            console.log(Http.responseText);
+            var resData=JSON.parse(Http.responseText);
+            console.log(resData);
+            var i;
+            var plotData=[];
+            for(i=0;i<resData.length;i++){
+                var y=resData[i]['value']
+                if(resData[i]['date']==selectedDate){
+                var Read1=resData[i]['date'].split('-');
+                var Read2=resData[i]['time'].split(':');
+                var x=new Date(Read1[0],Read1[1]-1,Read1[2],Read2[0],Read2[1]);
+                console.log(x,y);
+                plotData.push({x:x,y:y});
+                }
+                
+            }
+           
+            //console.log(plotData);
+            if(plotData.length!=0){
+                var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title:{
+                        text: "Humidity data"
+                    },
+                    axisX:{
+                        gridColor: "cyan" ,
+                        gridThickness: 2        
+                    },
+                    axisY:{        
+                        gridColor: "cyan"
+                    },
+                    data: [
+                        {
+                            type: "line",
+
+                            dataPoints: plotData
+                        }
+
+                    ]
+                });
+
+                chart.render();
+            }
+            else{
+                document.getElementById("chartContainer").innerHTML="No data available for this date."
+            }
+        }
+    }
+    Http.open("GET", url);
+   
+    Http.send();
+   
+
+}
+function myFunction1() {
+    var selectedDate=document.getElementById("demo1").value;
+    console.log(selectedDate);
+    console.log("function1");
+    const Http = new XMLHttpRequest();
+    const url='https://sensordata-8b704-default-rtdb.firebaseio.com/Moisture_data.json';
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = () => {
+        if (Http.readyState == 4 && Http.status == 200) {
+            console.log(Http.responseText);
+            var resData=JSON.parse(Http.responseText);
+            console.log(resData);
+            var i;
+            var plotData=[];
+            for(i=0;i<resData.length;i++){
+                var y=resData[i]['value']
+                if(resData[i]['date']==selectedDate){
+                var Read1=resData[i]['date'].split('-');
+                var Read2=resData[i]['time'].split(':');
+                var x=new Date(Read1[0],Read1[1]-1,Read1[2],Read2[0],Read2[1]);
+                console.log(x,y);
+                plotData.push({x:x,y:y});
+                }
+                
+            }
+           
+            //console.log(plotData);
+            if(plotData.length!=0){
+                var chart = new CanvasJS.Chart("chartContainer1",
+                {
+                    title:{
+                        text: "Moisture data"
+                    },
+                    axisX:{
+                        gridColor: "cyan" ,
+                        gridThickness: 2        
+                    },
+                    axisY:{        
+                        gridColor: "cyan"
+                    },
+                    data: [
+                        {
+                            type: "line",
+
+                            dataPoints: plotData
+                        }
+
+                    ]
+                });
+
+                chart.render();
+            }
+            else{
+                document.getElementById("chartContainer1").innerHTML="No data available for this date."
+            }
+        }
+    }
+    Http.open("GET", url);
+   
+    Http.send();
+   
+
+}
+function myFunction2() {
+    var selectedDate=document.getElementById("demo2").value;
+    console.log(selectedDate);
+    console.log("function1");
+    const Http = new XMLHttpRequest();
+    const url='https://sensordata-8b704-default-rtdb.firebaseio.com/Temperature_data.json';
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = () => {
+        if (Http.readyState == 4 && Http.status == 200) {
+            console.log(Http.responseText);
+            var resData=JSON.parse(Http.responseText);
+            console.log(resData);
+            var i;
+            var plotData=[];
+            for(i=0;i<resData.length;i++){
+                var y=resData[i]['value']
+                if(resData[i]['date']==selectedDate){
+                var Read1=resData[i]['date'].split('-');
+                var Read2=resData[i]['time'].split(':');
+                var x=new Date(Read1[0],Read1[1]-1,Read1[2],Read2[0],Read2[1]);
+                console.log(x,y);
+                plotData.push({x:x,y:y});
+                }
+                
+            }
+           
+            //console.log(plotData);
+            if(plotData.length!=0){
+                var chart = new CanvasJS.Chart("chartContainer2",
+                {
+                    title:{
+                        text: "Temperature data"
+                    },
+                    axisX:{
+                        gridColor: "cyan" ,
+                        gridThickness: 2        
+                    },
+                    axisY:{        
+                        gridColor: "cyan"
+                    },
+                    data: [
+                        {
+                            type: "line",
+
+                            dataPoints: plotData
+                        }
+
+                    ]
+                });
+
+                chart.render();
+            }
+            else{
+                document.getElementById("chartContainer2").innerHTML="No data available for this date."
+            }
+        }
+    }
+    Http.open("GET", url);
+   
+    Http.send();
+   
+
+}
+
+</script>
+
+
+</body>
+</html>
